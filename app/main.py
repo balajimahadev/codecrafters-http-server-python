@@ -13,11 +13,29 @@ def main():
 
     # Read data from the connection
     data = client_socket.recv(1024)
-    # Respond with HTTP/1.1 200 OK
-    response = b"HTTP/1.1 200 OK\r\n\r\n"
+
+    # Decode the data from bytes to string
+    request_str = data.decode('utf-8')
+
+    # Split the request by lines
+    request_lines = request_str.split('\r\n')
+
+    # Extract the path from the request line
+    request_line = request_lines[0]
+    method, path, _ = request_line.split()
+
+    # Print the path
+    # print('Requested path:', path)
+
+
+# Determine the response status and message based on the path
+    if path == '/':
+        response_status = b"HTTP/1.1 200 OK\r\n\r\n"
+    else:
+        response_status = b"HTTP/1.1 404 Not Found\r\n\r\n"
 
     # Send the response
-    client_socket.sendall(response)
+    client_socket.sendall(response_status)
 
     # Close the connection
     client_socket.close()
