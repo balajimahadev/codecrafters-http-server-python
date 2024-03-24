@@ -1,6 +1,8 @@
 # Uncomment this to pass the first stage
 import socket
 
+from whatthepatch import parse_patch
+
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -25,7 +27,7 @@ def main():
     method, path, _ = request_line.split()
 
     # Parse the path to extract the random string
-    random_string = parse_path(path)
+    random_string = parse_patch(path)
 
     # Prepare the response body with the parsed random string
     response_body = random_string.encode('utf-8')
