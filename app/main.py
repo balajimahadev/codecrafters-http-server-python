@@ -1,8 +1,6 @@
 # Uncomment this to pass the first stage
 import socket
 
-from whatthepatch import parse_patch
-
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -26,21 +24,15 @@ def main():
     request_line = request_lines[0]
     method, path, _ = request_line.split()
 
-    # Parse the path to extract the random string
-    random_string = parse_patch(path)
-
-    # Prepare the response body with the parsed random string
-    response_body = random_string.encode('utf-8')
-
-
-    # Print the path
-    print('Requested path:', response_body)
-
 
 # Determine the response status and message based on the path
-    if path == '/':
-        #response_status = b"HTTP/1.1 200 OK\r\n\r\n"
-        response_status = b"HTTP/1.1 200 OK\r\nContent-Length: %d\r\n\r\n%s" % (len(response_body), response_body)
+    if "echo" in path:
+        content = path[6:]
+        response_status = b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s" % (len(content), content)
+
+    elif path == '/':
+        response_status = b"HTTP/1.1 200 OK\r\n\r\n"
+        
     else:
         response_status = b"HTTP/1.1 404 Not Found\r\n\r\n"
 
