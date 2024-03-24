@@ -24,13 +24,21 @@ def main():
     request_line = request_lines[0]
     method, path, _ = request_line.split()
 
+    # Parse the path to extract the random string
+    random_string = parse_path(path)
+
+    # Prepare the response body with the parsed random string
+    response_body = random_string.encode('utf-8')
+
+
     # Print the path
-    # print('Requested path:', path)
+    print('Requested path:', response_body)
 
 
 # Determine the response status and message based on the path
     if path == '/':
-        response_status = b"HTTP/1.1 200 OK\r\n\r\n"
+        #response_status = b"HTTP/1.1 200 OK\r\n\r\n"
+        response_status = b"HTTP/1.1 200 OK\r\nContent-Length: %d\r\n\r\n%s" % (len(response_body), response_body)
     else:
         response_status = b"HTTP/1.1 404 Not Found\r\n\r\n"
 
