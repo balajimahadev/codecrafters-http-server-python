@@ -28,7 +28,7 @@ def main():
 # Determine the response status and message based on the path
     if "echo" in path:
         content = path[6:]
-        response_status = b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s" % (len(content), content)
+        response_status = b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s" % (len(content), content).encode()
 
     elif path == '/':
         response_status = b"HTTP/1.1 200 OK\r\n\r\n"
