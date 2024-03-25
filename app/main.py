@@ -19,10 +19,10 @@ def main():
     
     while True:
         client_socket, client_address = server_socket.accept() # wait for client
-        threading.Thread(target=process_request, args=(client_socket,directory)).start()
+        threading.Thread(target=process_request, args=(client_socket,client_address, directory)).start()
         
 
-def process_request(client_socket, directory):
+def process_request(client_socket, client_address, directory):
     # Read data from the connection
     data = client_socket.recv(1024)
 
@@ -75,6 +75,24 @@ def process_request(client_socket, directory):
         else:
             # If the file doesn't exist, send a 404 Not Found response
             response = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n".encode()
+
+    # Check if the method is POST and the path starts with "/files/"
+    elif method == 'POST' and path.startswith('/files/'):
+        # Extract the filename from the path
+        filename = path.split('/')[-1]
+
+        # Extract the file contents from the request body
+        file_contents = request_lines[-1].encode('utf-8')
+
+        # Construct the absolute path to save the file
+        filepath = os.path.join(directory, filename)
+
+        # Save the file contents to the specified directory
+        with open(filepath, 'wb') as file:
+            file.write(file_contents)
+
+        # Send a 201 Created response
+        response = "HTTP/1.1 201 Created\r\n\r\n".encode()
 
     elif path == '/user-agent':
         response = f"HTTP/1.1 200 OK \r\nContent-Type: text/plain\r\nContent-Length: {len(user_agent)}\r\n\n{user_agent}".encode()
