@@ -73,7 +73,7 @@ def process_request(client_socket, directory):
             response_headers = b"\r\n"
             response_body = b"404 Not Found - File not found"
 
-        response = response_status + response_headers + response_body
+        response = (response_status + response_headers + response_body).encode()
 
 
     elif path == '/user-agent':
