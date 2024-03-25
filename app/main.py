@@ -102,7 +102,5 @@ def process_request(client_socket, client_address, directory):
     # Send the response
     client_socket.sendall(response)
 
-
-
 if __name__ == "__main__":
     main()
