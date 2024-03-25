@@ -52,8 +52,6 @@ def main():
         # Send the response
         client_socket.sendall(response_status)
 
-        # Close the connection
-        client_socket.close()
 
 
 if __name__ == "__main__":
