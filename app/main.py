@@ -64,17 +64,17 @@ def process_request(client_socket, directory):
             # If the file exists, send a 200 OK response with file contents
             with open(filepath, 'rb') as file:
                 file_contents = file.read()
-                response_status = b"HTTP/1.1 200 OK\r\n"
-                response_headers = b"Content-Type: application/octet-stream\r\n\r\n"
-                response_body = file_contents
+                
+            header = (
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Type: application/octet-stream\r\n"
+                f"Content-Length: {len(file_contents)}\r\n\r\n"
+            ).encode()
+
+            response = header+file_contents
         else:
             # If the file doesn't exist, send a 404 Not Found response
-            response_status = b"HTTP/1.1 404 Not Found\r\n"
-            response_headers = b"\r\n"
-            response_body = b"404 Not Found - File not found"
-
-        response = (response_status + response_headers + response_body).encode()
-
+            response = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n".encode()
 
     elif path == '/user-agent':
         response = f"HTTP/1.1 200 OK \r\nContent-Type: text/plain\r\nContent-Length: {len(user_agent)}\r\n\n{user_agent}".encode()
