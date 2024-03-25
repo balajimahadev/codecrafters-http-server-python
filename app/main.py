@@ -20,6 +20,14 @@ def main():
     # Split the request by lines
     request_lines = request_str.split('\r\n')
 
+    # Extract the User-Agent header
+    user_agent = None
+    for line in request_lines:
+        if line.startswith('User-Agent:'):
+            user_agent = line.split(': ')[1]
+            print(user_agent)
+            break
+
     # Extract the path from the request line
     request_line = request_lines[0]
     method, path, _ = request_line.split()
@@ -32,7 +40,9 @@ def main():
 
     elif path == '/':
         response_status = b"HTTP/1.1 200 OK\r\n\r\n"
-        
+
+    elif path == '/user-agent':
+        response_status = f"HTTP/1.1 200 OK \r\nContent-Type: text/plain\r\nContent-Length: {len(user_agent)}\r\n\n{user_agent}".encode()
     else:
         response_status = b"HTTP/1.1 404 Not Found\r\n\r\n"
 
